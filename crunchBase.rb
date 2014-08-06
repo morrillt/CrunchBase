@@ -1,7 +1,7 @@
 require 'open-uri'
 require 'json'
 
-#
+#Script
 class Crunch_base
 	
 	def initialize
