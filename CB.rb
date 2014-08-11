@@ -4,41 +4,40 @@ require 'json'
 class Crunch_base
 	
 	def initialize
-		@organizations = Array.new
-		@organization = Array.new
+		@names = Array.new
+		@path = Array.new
 		@permalink = Array.new
+
 	end
 
 
 
 	# Get information of a specific url(page)
 	# info can be "updated_at" | "name" | "path" | "created_at" | "type"
-	def get_organizations_page(page, info)
-		url = create_url("organizations","",page)
-		result = read_url(url)
-		result['data']['items'].each do |organization|
-			info.each do |i|	
-				information << organization[i]
-			end
-		end
-		return information
-	end
-
-
-	def get_organization_names(names)
-		@organizations << names
-	end
-	#
 	def get_organizations_all_pages(info)
 		page=1
 		begin
 			url = create_url("organizations","",page)
 			result = read_url(url)
-			if info == 
-			next_url = result['data']['paging']['next_page_url']
 			sleep(2)
+			next_url = result['data']['paging']['next_page_url']
+
+			get_organization_info(result,info)
 			page = page + 1
-		end while next_url != nil
+			puts "Page is #{page}"
+		end while page <= 2 #next_url != nil
+		puts @names.size
+	end
+
+	def get_organization_info(result, info)
+		path = Array.new
+		result['data']['items'].each do |organization|
+			if info == "name"
+				@names << organization[info]
+			elsif info == "path"
+				@path << organization[info]
+			end
+		end
 	end
 
 	def get_CEOandCTO_names()
@@ -113,7 +112,8 @@ class Crunch_base
 end
 
 	a = Crunch_base.new
- 	a.get_organization
+ 	a.get_organizations_all_pages('name')
+
 
 
 
